@@ -39,20 +39,20 @@ function Home() {
         message as string
       );
       // This redirect will trigger react-auth to automatically load the user state
-      // window.location.href = window.location.origin + "/";
+      window.location.href = window.location.origin + "?address=" + address;
     };
     signInUsingParams();
   }, [signature, address, message, privy.auth.siwe]);
 
   useEffect(() => {
-    if (authenticated && user && address) {
+    if (authenticated && user && address && fundWallet) {
       fundWallet(
         user?.customMetadata?.smartAccountAddress?.toString() ||
           user?.wallet?.address ||
           address!
       );
     }
-  }, [authenticated, user, address]);
+  }, [authenticated, user, address, fundWallet]);
 
   return (
     <>
