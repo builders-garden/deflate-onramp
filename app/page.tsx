@@ -1,9 +1,8 @@
 "use client";
 import Privy, { LocalStorage } from "@privy-io/js-sdk-core";
-import { usePrivy } from "@privy-io/react-auth";
+import { useFundWallet, usePrivy } from "@privy-io/react-auth";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect } from "react";
-import { baseSepolia } from "viem/chains";
 
 export default function HomePage() {
   return (
@@ -18,13 +17,14 @@ function Home() {
   const signature = searchParams.get("signature");
   const message = searchParams.get("message");
   const address = searchParams.get("address");
+  const { fundWallet } = useFundWallet();
 
   const privy = new Privy({
     appId: process.env.NEXT_PUBLIC_PRIVY_APP_ID!,
     storage: new LocalStorage(),
   });
 
-  const { connectOrCreateWallet, authenticated, user } = usePrivy();
+  const { authenticated, user } = usePrivy();
 
   useEffect(() => {
     const signInUsingParams = async () => {
@@ -33,7 +33,7 @@ function Home() {
         signature as string,
         {
           address: address as string,
-          chainId: `eip155:${baseSepolia.id}`,
+          chainId: `eip155:8453`,
         },
         message as string
       );
@@ -42,20 +42,23 @@ function Home() {
     };
     signInUsingParams();
   }, [signature, address, message, privy.auth.siwe]);
+
+  useEffect(() => {
+    if (authenticated) {
+      fundWallet(
+        user?.customMetadata?.smartAccountAddress.toString() || address!,
+        {}
+      );
+    }
+  }, [authenticated]);
+
   return (
     <>
       {!authenticated && (
-        <button
-          className="bg-blue-500 text-white p-2 rounded-md"
-          onClick={() => connectOrCreateWallet()}
-        >
-          Login
-        </button>
+        <p className="text-black">Loading... don&apos;t close this page.</p>
       )}
       {authenticated && user && (
-        <p className="text-black">
-          Welcome back <span className="font-bold">{user.wallet?.address}</span>
-        </p>
+        <p className="text-black">Opening on-ramp...</p>
       )}
     </>
   );
