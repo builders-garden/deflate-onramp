@@ -39,7 +39,7 @@ function Home() {
         message as string
       );
       // This redirect will trigger react-auth to automatically load the user state
-      window.location.href = window.location.origin + "/";
+      // window.location.href = window.location.origin + "/";
     };
     signInUsingParams();
   }, [signature, address, message, privy.auth.siwe]);
