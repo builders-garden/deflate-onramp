@@ -2,10 +2,18 @@
 import Privy, { LocalStorage } from "@privy-io/js-sdk-core";
 import { usePrivy } from "@privy-io/react-auth";
 import { useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import { baseSepolia } from "viem/chains";
 
-export default function Home() {
+export default function HomePage() {
+  return (
+    <Suspense>
+      <Home />
+    </Suspense>
+  );
+}
+
+function Home() {
   const searchParams = useSearchParams();
   const signature = searchParams.get("signature");
   const message = searchParams.get("message");
