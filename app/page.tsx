@@ -45,19 +45,21 @@ function Home() {
   }, [signature, address, message, privy.auth.siwe]);
 
   useEffect(() => {
-    if (authenticated) {
+    if (authenticated && user && address) {
       fundWallet(
-        user?.customMetadata?.smartAccountAddress?.toString() || address!
+        user?.customMetadata?.smartAccountAddress?.toString() ||
+          user?.wallet?.address ||
+          address!
       );
     }
-  }, [authenticated]);
+  }, [authenticated, user, address]);
 
   return (
     <>
       {!authenticated && (
         <p className="text-black">Loading... don&apos;t close this page.</p>
       )}
-      {authenticated && user && (
+      {authenticated && user && address && (
         <p className="text-black">Opening on-ramp...</p>
       )}
     </>
