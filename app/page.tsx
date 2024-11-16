@@ -1,4 +1,5 @@
 "use client";
+
 import Privy, { LocalStorage } from "@privy-io/js-sdk-core";
 import { useFundWallet, usePrivy } from "@privy-io/react-auth";
 import { useSearchParams } from "next/navigation";
@@ -46,8 +47,7 @@ function Home() {
   useEffect(() => {
     if (authenticated) {
       fundWallet(
-        user?.customMetadata?.smartAccountAddress.toString() || address!,
-        {}
+        user?.customMetadata?.smartAccountAddress?.toString() || address!
       );
     }
   }, [authenticated]);
